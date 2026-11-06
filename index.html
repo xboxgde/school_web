@@ -35,6 +35,15 @@
       <p id="input-status" class="status" role="status" aria-live="polite"></p>
     </form>
   </section>
+  
+  <!-- [추가] 미등록 생일 안내 화면 -->
+  <section id="screen-not-found" class="screen screen--center" hidden>
+    <div class="panel">
+      <h2>등록되지 않은 생일이에요</h2>
+      <p id="notfound-text"></p>
+      <button type="button" data-go="welcome">처음으로</button>
+    </div>
+  </section>
 
   <!-- 화면 3: 동일 생일자 확인 화면 -->
   <section id="screen-confirm" class="screen screen--center" hidden>

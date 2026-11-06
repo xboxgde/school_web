@@ -13,7 +13,8 @@ const DEFAULT_GIFT_MESSAGE = "생일을 진심으로 축하해요! 🎉";
 // ============================================================
 // 2. 화면 전환 관리
 // ============================================================
-const SCREENS = ["welcome", "input", "confirm", "celebrate", "admin-login", "admin"];
+// [수정] "not-found" 추가
+const SCREENS = ["welcome", "input", "confirm", "not-found", "celebrate", "admin-login", "admin"];
 
 function show(name) {
   SCREENS.forEach((s) => {
@@ -99,8 +100,10 @@ $("birthday-form").addEventListener("submit", async (e) => {
     renderConfirm(data, month, day);
     show("confirm");
   } else {
-    startCelebration(null, month, day); // 등록자 없음 → 기본 선물
-  }
+  // 등록자가 없으면 미등록 안내 화면을 보여준다
+  $("notfound-text").textContent = `${month}월 ${day}일은 등록되어 있지 않아요.`;
+  show("not-found");
+}
 });
 
 function renderConfirm(people, month, day) {
