@@ -5,53 +5,125 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>생일 축하해요 🎂</title>
 
-  <!-- 구글 폰트: 제목용(Black Han Sans) + 본문용(Gowun Dodum) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&display=swap" rel="stylesheet" />
-
-  <!-- 내 CSS 파일 연결 -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- 1. 히어로 영역: 사이트 첫 화면 -->
-  <header class="hero">
-    <p class="hero__sub">To. 주인공 이름</p>
-    <h1 class="hero__title">생일 축하해!</h1>
-    <p class="hero__date">0000년 00월 00일</p>
-  </header>
+  <!-- [추가] 오른쪽 상단 고정 개발자 버튼 (모든 화면에서 보임) -->
+  <button id="admin-btn" class="admin-btn" type="button">개발자</button>
 
-  <main>
-    <!-- 2. 축하 메시지 작성 영역 -->
-    <section class="card" aria-labelledby="write-title">
-      <h2 id="write-title">축하 메시지 남기기</h2>
+  <!-- [추가] 화면 1: 환영 화면 (정 가운데 버튼) -->
+  <section id="screen-welcome" class="screen screen--center">
+    <button id="welcome-btn" class="big-btn" type="button">환영합니다!</button>
+  </section>
 
-      <form id="message-form">
-        <label for="name">이름</label>
-        <input id="name" name="name" type="text" maxlength="20" required placeholder="누구세요?" />
+  <!-- [추가] 화면 2: 생일 입력 화면 -->
+  <section id="screen-input" class="screen screen--center" hidden>
+    <form id="birthday-form" class="panel">
+      <h2>생일을 입력해 주세요</h2>
+      <div class="row">
+        <select id="bd-month" aria-label="월" required></select>
+        <span>월</span>
+        <select id="bd-day" aria-label="일" required></select>
+        <span>일</span>
+      </div>
+      <button type="submit">확인</button>
+      <button type="button" class="ghost" data-go="welcome">처음으로</button>
+      <p id="input-status" class="status" role="status" aria-live="polite"></p>
+    </form>
+  </section>
 
-        <label for="content">메시지</label>
-        <textarea id="content" name="content" maxlength="300" rows="4" required placeholder="축하 한마디를 남겨주세요"></textarea>
+  <!-- [추가] 화면 3: 동일 생일자 확인 화면 -->
+  <section id="screen-confirm" class="screen screen--center" hidden>
+    <div class="panel">
+      <h2>혹시 이분이신가요?</h2>
+      <!-- 일치하는 이름 버튼이 JS로 채워짐 -->
+      <ul id="confirm-list" class="pick-list"></ul>
+      <button type="button" class="ghost" id="confirm-no">아니에요</button>
+    </div>
+  </section>
 
-        <button type="submit" id="submit-btn">메시지 보내기</button>
-        <!-- 성공/실패 안내 문구가 표시되는 곳 -->
-        <p id="status" role="status" aria-live="polite"></p>
-      </form>
-    </section>
+  <!-- [수정] 화면 4: 생일 축하 화면 (기존 헤더+메시지 영역을 이 화면 안으로 이동) -->
+  <section id="screen-celebrate" class="screen" hidden>
+    <header class="hero">
+      <!-- [수정] 고정 문구 → JS가 이름/날짜를 채움 -->
+      <p class="hero__sub" id="hero-sub"></p>
+      <h1 class="hero__title" id="hero-title">생일 축하해요!</h1>
+      <p class="hero__date" id="hero-date"></p>
+    </header>
 
-    <!-- 3. 메시지 목록 영역 -->
-    <section class="card" aria-labelledby="list-title">
-      <h2 id="list-title">도착한 메시지</h2>
-      <ul id="message-list" class="messages">
-        <li class="messages__empty">불러오는 중…</li>
-      </ul>
-    </section>
-  </main>
+    <main>
+      <section class="card" aria-labelledby="write-title">
+        <h2 id="write-title">축하 메시지 남기기</h2>
+        <form id="message-form">
+          <label for="name">이름</label>
+          <input id="name" name="name" type="text" maxlength="20" required placeholder="누구세요?" />
+          <label for="content">메시지</label>
+          <textarea id="content" name="content" maxlength="300" rows="4" required placeholder="축하 한마디를 남겨주세요"></textarea>
+          <button type="submit" id="submit-btn">메시지 보내기</button>
+          <p id="status" class="status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
 
-  <!-- Supabase 라이브러리 (CDN, 버전 고정) -->
+      <section class="card" aria-labelledby="list-title">
+        <h2 id="list-title">도착한 메시지</h2>
+        <ul id="message-list" class="messages">
+          <li class="messages__empty">불러오는 중…</li>
+        </ul>
+      </section>
+
+      <button type="button" class="ghost" data-go="welcome">처음으로</button>
+    </main>
+  </section>
+
+  <!-- [추가] 화면 5: 개발자 로그인 화면 -->
+  <section id="screen-admin-login" class="screen screen--center" hidden>
+    <form id="login-form" class="panel">
+      <h2>개발자 로그인</h2>
+      <label for="admin-id">ID (이메일)</label>
+      <input id="admin-id" type="email" autocomplete="username" required />
+      <label for="admin-pw">Password</label>
+      <input id="admin-pw" type="password" autocomplete="current-password" required />
+      <button type="submit">로그인</button>
+      <button type="button" class="ghost" data-go="welcome">돌아가기</button>
+      <p id="login-status" class="status" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <!-- [추가] 화면 6: 개발자 화면 (생일 등록/수정) -->
+  <section id="screen-admin" class="screen" hidden>
+    <main class="admin-main">
+      <div class="card">
+        <h2>생일 등록 / 수정</h2>
+        <form id="admin-form">
+          <!-- 수정 모드일 때만 값이 들어가는 숨김 id -->
+          <input type="hidden" id="admin-edit-id" />
+          <label for="admin-name">이름</label>
+          <input id="admin-name" type="text" maxlength="20" required />
+          <label>생일</label>
+          <div class="row">
+            <select id="admin-month" aria-label="월" required></select><span>월</span>
+            <select id="admin-day" aria-label="일" required></select><span>일</span>
+          </div>
+          <button type="submit" id="admin-save">등록</button>
+          <button type="button" class="ghost" id="admin-cancel" hidden>수정 취소</button>
+          <p id="admin-status" class="status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>등록된 생일</h2>
+        <ul id="admin-list" class="messages"></ul>
+      </div>
+
+      <button type="button" class="ghost" id="logout-btn">로그아웃</button>
+    </main>
+  </section>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-  <!-- 내 JS 파일: 반드시 라이브러리 아래에 둔다 -->
   <script src="script.js"></script>
 </body>
 </html>
