@@ -12,15 +12,15 @@
 </head>
 <body>
 
-  <!-- [추가] 오른쪽 상단 고정 개발자 버튼 (모든 화면에서 보임) -->
+  <!-- 오른쪽 상단 고정 개발자 버튼 -->
   <button id="admin-btn" class="admin-btn" type="button">개발자</button>
 
-  <!-- [추가] 화면 1: 환영 화면 (정 가운데 버튼) -->
+  <!-- 화면 1: 환영 화면 -->
   <section id="screen-welcome" class="screen screen--center">
     <button id="welcome-btn" class="big-btn" type="button">환영합니다!</button>
   </section>
 
-  <!-- [추가] 화면 2: 생일 입력 화면 -->
+  <!-- 화면 2: 생일 입력 화면 -->
   <section id="screen-input" class="screen screen--center" hidden>
     <form id="birthday-form" class="panel">
       <h2>생일을 입력해 주세요</h2>
@@ -36,50 +36,50 @@
     </form>
   </section>
 
-  <!-- [추가] 화면 3: 동일 생일자 확인 화면 -->
+  <!-- 화면 3: 동일 생일자 확인 화면 -->
   <section id="screen-confirm" class="screen screen--center" hidden>
     <div class="panel">
       <h2>혹시 이분이신가요?</h2>
-      <!-- 일치하는 이름 버튼이 JS로 채워짐 -->
       <ul id="confirm-list" class="pick-list"></ul>
       <button type="button" class="ghost" id="confirm-no">아니에요</button>
     </div>
   </section>
 
-  <!-- [수정] 화면 4: 생일 축하 화면 (기존 헤더+메시지 영역을 이 화면 안으로 이동) -->
-  <section id="screen-celebrate" class="screen" hidden>
-    <header class="hero">
-      <!-- [수정] 고정 문구 → JS가 이름/날짜를 채움 -->
-      <p class="hero__sub" id="hero-sub"></p>
-      <h1 class="hero__title" id="hero-title">생일 축하해요!</h1>
-      <p class="hero__date" id="hero-date"></p>
-    </header>
+  <!-- [수정] 화면 4: 축하 화면 — 기존 헤더+메시지 폼/목록 삭제, 선물상자 화면으로 교체 -->
+  <section id="screen-celebrate" class="screen screen--gift" hidden>
+    <!-- 세로 3분할(위/가운데/아래) 구조: 가운데 칸에 선물상자가 항상 정중앙에 온다 -->
+    <div class="gift-stage">
 
-    <main>
-      <section class="card" aria-labelledby="write-title">
-        <h2 id="write-title">축하 메시지 남기기</h2>
-        <form id="message-form">
-          <label for="name">이름</label>
-          <input id="name" name="name" type="text" maxlength="20" required placeholder="누구세요?" />
-          <label for="content">메시지</label>
-          <textarea id="content" name="content" maxlength="300" rows="4" required placeholder="축하 한마디를 남겨주세요"></textarea>
-          <button type="submit" id="submit-btn">메시지 보내기</button>
-          <p id="status" class="status" role="status" aria-live="polite"></p>
-        </form>
-      </section>
+      <!-- 위 칸: 축하 문구 -->
+      <div class="gift-top">
+        <h1 class="gift-title" id="hero-title">생일 축하해요!</h1>
+        <p class="gift-date" id="hero-date"></p>
+      </div>
 
-      <section class="card" aria-labelledby="list-title">
-        <h2 id="list-title">도착한 메시지</h2>
-        <ul id="message-list" class="messages">
-          <li class="messages__empty">불러오는 중…</li>
-        </ul>
-      </section>
+      <!-- 가운데 칸: 선물상자 (열면 사라지고 내용 카드가 같은 자리에 나타남) -->
+      <div class="gift-center">
+        <button type="button" id="gift-box" class="gift" aria-label="선물상자 열기">
+          <span class="gift__body"></span>
+          <span class="gift__lid"><span class="gift__bow"></span></span>
+        </button>
 
-      <button type="button" class="ghost" data-go="welcome">처음으로</button>
-    </main>
+        <!-- 선물을 열면 보이는 내용: 개발자가 설정한 사진 + 메시지 -->
+        <div id="gift-content" class="gift-content" hidden>
+          <img id="gift-photo" class="gift-photo" alt="생일 선물 사진" hidden />
+          <p id="gift-message" class="gift-message"></p>
+          <button type="button" class="ghost" data-go="welcome">처음으로</button>
+        </div>
+      </div>
+
+      <!-- 아래 칸: 안내 문구 -->
+      <div class="gift-bottom">
+        <p id="gift-hint" class="gift-hint">선물상자를 눌러 열어보세요</p>
+      </div>
+
+    </div>
   </section>
 
-  <!-- [추가] 화면 5: 개발자 로그인 화면 -->
+  <!-- 화면 5: 개발자 로그인 화면 -->
   <section id="screen-admin-login" class="screen screen--center" hidden>
     <form id="login-form" class="panel">
       <h2>개발자 로그인</h2>
@@ -93,21 +93,37 @@
     </form>
   </section>
 
-  <!-- [추가] 화면 6: 개발자 화면 (생일 등록/수정) -->
+  <!-- 화면 6: 개발자 화면 -->
   <section id="screen-admin" class="screen" hidden>
     <main class="admin-main">
       <div class="card">
         <h2>생일 등록 / 수정</h2>
         <form id="admin-form">
-          <!-- 수정 모드일 때만 값이 들어가는 숨김 id -->
           <input type="hidden" id="admin-edit-id" />
+
           <label for="admin-name">이름</label>
           <input id="admin-name" type="text" maxlength="20" required />
+
           <label>생일</label>
           <div class="row">
             <select id="admin-month" aria-label="월" required></select><span>월</span>
             <select id="admin-day" aria-label="일" required></select><span>일</span>
           </div>
+
+          <!-- [추가] 선물 메시지 -->
+          <label for="admin-gift-msg">선물 메시지</label>
+          <textarea id="admin-gift-msg" maxlength="500" rows="4" placeholder="선물상자를 열면 보여줄 메시지"></textarea>
+          <!-- 수정 모드에서 저장된 메시지가 있을 때만 표시 -->
+          <button type="button" class="ghost" id="admin-del-msg" hidden>메시지 삭제</button>
+
+          <!-- [추가] 선물 사진 -->
+          <label for="admin-photo">선물 사진</label>
+          <input id="admin-photo" type="file" accept="image/*" />
+          <div id="admin-photo-box" hidden>
+            <img id="admin-photo-preview" class="admin-photo" alt="선물 사진 미리보기" />
+            <button type="button" class="ghost" id="admin-del-photo">사진 삭제</button>
+          </div>
+
           <button type="submit" id="admin-save">등록</button>
           <button type="button" class="ghost" id="admin-cancel" hidden>수정 취소</button>
           <p id="admin-status" class="status" role="status" aria-live="polite"></p>
