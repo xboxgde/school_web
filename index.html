@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>생일 축하해요 🎂</title>
+
+  <!-- 구글 폰트: 제목용(Black Han Sans) + 본문용(Gowun Dodum) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&display=swap" rel="stylesheet" />
+
+  <!-- 내 CSS 파일 연결 -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- 1. 히어로 영역: 사이트 첫 화면 -->
+  <header class="hero">
+    <p class="hero__sub">To. 주인공 이름</p>
+    <h1 class="hero__title">생일 축하해!</h1>
+    <p class="hero__date">0000년 00월 00일</p>
+  </header>
+
+  <main>
+    <!-- 2. 축하 메시지 작성 영역 -->
+    <section class="card" aria-labelledby="write-title">
+      <h2 id="write-title">축하 메시지 남기기</h2>
+
+      <form id="message-form">
+        <label for="name">이름</label>
+        <input id="name" name="name" type="text" maxlength="20" required placeholder="누구세요?" />
+
+        <label for="content">메시지</label>
+        <textarea id="content" name="content" maxlength="300" rows="4" required placeholder="축하 한마디를 남겨주세요"></textarea>
+
+        <button type="submit" id="submit-btn">메시지 보내기</button>
+        <!-- 성공/실패 안내 문구가 표시되는 곳 -->
+        <p id="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- 3. 메시지 목록 영역 -->
+    <section class="card" aria-labelledby="list-title">
+      <h2 id="list-title">도착한 메시지</h2>
+      <ul id="message-list" class="messages">
+        <li class="messages__empty">불러오는 중…</li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- Supabase 라이브러리 (CDN, 버전 고정) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <!-- 내 JS 파일: 반드시 라이브러리 아래에 둔다 -->
+  <script src="script.js"></script>
+</body>
+</html>
